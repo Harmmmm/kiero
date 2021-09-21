@@ -555,7 +555,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 					"glTexCoord4sv", "glTexCoordPointer", "glTexEnvf", "glTexEnvfv", "glTexEnvi", "glTexEnviv", "glTexGend", "glTexGendv", "glTexGenf", "glTexGenfv", "glTexGeni", "glTexGeniv", "glTexImage1D",
 					"glTexImage2D", "glTexParameterf", "glTexParameterfv", "glTexParameteri", "glTexParameteriv", "glTexSubImage1D", "glTexSubImage2D", "glTranslated", "glTranslatef", "glVertex2d",
 					"glVertex2dv", "glVertex2f", "glVertex2fv", "glVertex2i", "glVertex2iv", "glVertex2s", "glVertex2sv", "glVertex3d", "glVertex3dv", "glVertex3f", "glVertex3fv", "glVertex3i", "glVertex3iv",
-					"glVertex3s", "glVertex3sv", "glVertex4d", "glVertex4dv", "glVertex4f", "glVertex4fv", "glVertex4i", "glVertex4iv", "glVertex4s", "glVertex4sv", "glVertexPointer", "glViewport"
+					"glVertex3s", "glVertex3sv", "glVertex4d", "glVertex4dv", "glVertex4f", "glVertex4fv", "glVertex4i", "glVertex4iv", "glVertex4s", "glVertex4sv", "glVertexPointer", "glViewport", "wglSwapBuffers"
 				};
 
 				size_t size = KIERO_ARRAY_SIZE(methodsNames);
@@ -695,31 +695,6 @@ kiero::Status::Enum kiero::bind(uint16_t _index, void** _original, void* _functi
 		{
 			return Status::UnknownError;
 		}
-#endif
-
-		return Status::Success;
-	}
-
-	return Status::NotInitializedError;
-}
-
-kiero::Status::Enum kiero::bindApi(LPCWSTR pszModule, LPCSTR pszProcName, LPVOID pDetour, LPVOID* ppOriginal)
-{
-	if (g_renderType != RenderType::None)
-	{
-#if KIERO_USE_MINHOOK
-		LPVOID pTarget = NULL;
-		MH_STATUS status = MH_UNKNOWN;
-
-		status = MH_CreateHookApiEx(pszModule, pszProcName, pDetour, ppOriginal, &pTarget);
-
-		if (status != MH_OK)
-			return Status::UnknownError;
-
-		status = MH_EnableHook(pTarget);
-
-		if (status != MH_OK)
-			return Status::UnknownError;
 #endif
 
 		return Status::Success;

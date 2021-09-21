@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define KIERO_VERSION "1.3.0"
+#define KIERO_VERSION "1.2.12-Harmmmm"
 
 #define KIERO_INCLUDE_D3D9   0 // 1 if you need D3D9 hook
 #define KIERO_INCLUDE_D3D10  0 // 1 if you need D3D10 hook
@@ -49,7 +49,6 @@ namespace kiero
 	void shutdown();
 
 	Status::Enum bind(uint16_t index, void** original, void* function);
-	Status::Enum bindApi(LPCWSTR pszModule, LPCSTR pszProcName, LPVOID pDetour, LPVOID* ppOriginal);
 	void unbind(uint16_t index);
 
 	RenderType::Enum getRenderType();

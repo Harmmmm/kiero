@@ -46,7 +46,7 @@ bool __stdcall hkWglSwapBuffers(HDC hdc)
 
 void impl::opengl::init()
 {
-	assert(kiero::bindApi(L"OpenGL32.dll", "wglSwapBuffers", hkWglSwapBuffers, (void**)&oWglSwapBuffers) == kiero::Status::Success);
+	assert(kiero::bind(336, (void**)&oWglSwapBuffers, hkWglSwapBuffers) == kiero::Status::Success);
 }
 
 #endif // KIERO_INCLUDE_OPENGL

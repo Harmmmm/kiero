@@ -933,6 +933,7 @@ OpenGL Methods Table:
 [333] glVertex4sv
 [334] glVertexPointer
 [335] glViewport
+[336] wglSwapBuffers
 
 Vulkan Methods Table:
 [0]   vkCreateInstance
