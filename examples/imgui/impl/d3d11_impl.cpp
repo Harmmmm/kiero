@@ -1,4 +1,4 @@
-﻿#include "kiero.h"
+#include "kiero.h"
 
 #if KIERO_INCLUDE_D3D11
 
@@ -53,7 +53,7 @@ long __stdcall hkPresent11(IDXGISwapChain* pSwapChain, UINT SyncInterval, UINT F
 
 void impl::d3d11::init()
 {
-	assert(kiero::bind(8, (void**)&oPresent, hkPresent11) == kiero::Status::Success);
+	kiero::bind(8, (void**)&oPresent, hkPresent11);
 }
 
 #endif // KIERO_INCLUDE_D3D11

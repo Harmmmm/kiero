@@ -1,4 +1,4 @@
-﻿#include "kiero.h"
+#include "kiero.h"
 
 #if KIERO_INCLUDE_OPENGL
 
@@ -46,7 +46,7 @@ bool __stdcall hkWglSwapBuffers(HDC hdc)
 
 void impl::opengl::init()
 {
-	assert(kiero::bind(336, (void**)&oWglSwapBuffers, hkWglSwapBuffers) == kiero::Status::Success);
+	kiero::bind(336, (void**)&oWglSwapBuffers, hkWglSwapBuffers);
 }
 
 #endif // KIERO_INCLUDE_OPENGL

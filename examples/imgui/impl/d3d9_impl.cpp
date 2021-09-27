@@ -1,4 +1,4 @@
-﻿#include "kiero.h"
+#include "kiero.h"
 
 #if KIERO_INCLUDE_D3D9
 
@@ -59,8 +59,8 @@ long __stdcall hkEndScene(LPDIRECT3DDEVICE9 pDevice)
 
 void impl::d3d9::init()
 {
-	assert(kiero::bind(16, (void**)&oReset, hkReset) == kiero::Status::Success);
-	assert(kiero::bind(42, (void**)&oEndScene, hkEndScene) == kiero::Status::Success);
+	kiero::bind(16, (void**)&oReset, hkReset);
+	kiero::bind(42, (void**)&oEndScene, hkEndScene);
 }
 
 #endif // KIERO_INCLUDE_D3D9
