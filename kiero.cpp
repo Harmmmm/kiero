@@ -1,34 +1,34 @@
 #include "kiero.h"
 
-#if KIERO_INCLUDE_D3D9
+#ifdef KIERO_INCLUDE_D3D9
 #include <d3d9.h>
 #endif
 
-#if KIERO_INCLUDE_D3D10
+#ifdef KIERO_INCLUDE_D3D10
 #include <dxgi.h>
 #include <d3d10_1.h>
 #include <d3d10.h>
 #endif
 
-#if KIERO_INCLUDE_D3D11
+#ifdef KIERO_INCLUDE_D3D11
 #include <dxgi.h>
 #include <d3d11.h>
 #endif
 
-#if KIERO_INCLUDE_D3D12
+#ifdef KIERO_INCLUDE_D3D12
 #include <dxgi.h>
 #include <d3d12.h>
 #endif
 
-#if KIERO_INCLUDE_OPENGL
+#ifdef KIERO_INCLUDE_OPENGL
 #include <gl/GL.h>
 #endif
 
-#if KIERO_INCLUDE_VULKAN
+#ifdef KIERO_INCLUDE_VULKAN
 #include <vulkan/vulkan.h>
 #endif
 
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 #include <MinHook.h>
 
 #if defined _M_X64
@@ -38,14 +38,6 @@
 #endif
 
 #endif
-
-#ifdef _UNICODE
-#define KIERO_TEXT(text) L##text
-#else
-#define KIERO_TEXT(text) text
-#endif
-
-#define KIERO_ARRAY_SIZE(arr) ((size_t)(sizeof(arr)/sizeof(arr[0])))
 
 static kiero::RenderType::Enum g_renderType = kiero::RenderType::None;
 static uintptr_t* g_methodsTable = NULL;
@@ -81,7 +73,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 
 			if (_renderType == RenderType::D3D9)
 			{
-#if KIERO_INCLUDE_D3D9
+#ifdef KIERO_INCLUDE_D3D9
 				HMODULE libD3D9;
 				if ((libD3D9 = ::GetModuleHandle(KIERO_TEXT("d3d9.dll"))) == NULL)
 				{
@@ -91,7 +83,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				void* Direct3DCreate9;
-				if ((Direct3DCreate9 = ::GetProcAddress(libD3D9, "Direct3DCreate9")) == NULL)
+				if ((Direct3DCreate9 = ::GetProcAddress(libD3D9, KIERO_TEXTA("Direct3DCreate9"))) == NULL)
 				{
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
@@ -134,7 +126,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				g_methodsTable = (uintptr_t*)::calloc(119, sizeof(uintptr_t));
 				::memcpy(g_methodsTable, *(uintptr_t**)device, 119 * sizeof(uintptr_t));
 
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 				MH_Initialize();
 #endif
 
@@ -154,7 +146,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 			}
 			else if (_renderType == RenderType::D3D10)
 			{
-#if KIERO_INCLUDE_D3D10
+#ifdef KIERO_INCLUDE_D3D10
 				HMODULE libDXGI;
 				HMODULE libD3D10;
 				if ((libDXGI = ::GetModuleHandle(KIERO_TEXT("dxgi.dll"))) == NULL || (libD3D10 = ::GetModuleHandle(KIERO_TEXT("d3d10.dll"))) == NULL)
@@ -165,7 +157,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				void* CreateDXGIFactory;
-				if ((CreateDXGIFactory = ::GetProcAddress(libDXGI, "CreateDXGIFactory")) == NULL)
+				if ((CreateDXGIFactory = ::GetProcAddress(libDXGI, KIERO_TEXTA("CreateDXGIFactory"))) == NULL)
 				{
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
@@ -189,7 +181,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				void* D3D10CreateDeviceAndSwapChain;
-				if ((D3D10CreateDeviceAndSwapChain = ::GetProcAddress(libD3D10, "D3D10CreateDeviceAndSwapChain")) == NULL)
+				if ((D3D10CreateDeviceAndSwapChain = ::GetProcAddress(libD3D10, KIERO_TEXTA("D3D10CreateDeviceAndSwapChain"))) == NULL)
 				{
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
@@ -244,7 +236,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				::memcpy(g_methodsTable, *(uintptr_t**)swapChain, 18 * sizeof(uintptr_t));
 				::memcpy(g_methodsTable + 18, *(uintptr_t**)device, 98 * sizeof(uintptr_t));
 
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 				MH_Initialize();
 #endif
 
@@ -264,7 +256,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 			}
 			else if (_renderType == RenderType::D3D11)
 			{
-#if KIERO_INCLUDE_D3D11
+#ifdef KIERO_INCLUDE_D3D11
 				HMODULE libD3D11;
 				if ((libD3D11 = ::GetModuleHandle(KIERO_TEXT("d3d11.dll"))) == NULL)
 				{
@@ -274,7 +266,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				void* D3D11CreateDeviceAndSwapChain;
-				if ((D3D11CreateDeviceAndSwapChain = ::GetProcAddress(libD3D11, "D3D11CreateDeviceAndSwapChain")) == NULL)
+				if ((D3D11CreateDeviceAndSwapChain = ::GetProcAddress(libD3D11, KIERO_TEXTA("D3D11CreateDeviceAndSwapChain"))) == NULL)
 				{
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
@@ -338,7 +330,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				::memcpy(g_methodsTable + 18, *(uintptr_t**)device, 43 * sizeof(uintptr_t));
 				::memcpy(g_methodsTable + 18 + 43, *(uintptr_t**)context, 144 * sizeof(uintptr_t));
 
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 				MH_Initialize();
 #endif
 
@@ -361,7 +353,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 			}
 			else if (_renderType == RenderType::D3D12)
 			{
-#if KIERO_INCLUDE_D3D12
+#ifdef KIERO_INCLUDE_D3D12
 				HMODULE libDXGI;
 				HMODULE libD3D12;
 				if ((libDXGI = ::GetModuleHandle(KIERO_TEXT("dxgi.dll"))) == NULL || (libD3D12 = ::GetModuleHandle(KIERO_TEXT("d3d12.dll"))) == NULL)
@@ -372,7 +364,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				void* CreateDXGIFactory;
-				if ((CreateDXGIFactory = ::GetProcAddress(libDXGI, "CreateDXGIFactory")) == NULL)
+				if ((CreateDXGIFactory = ::GetProcAddress(libDXGI, KIERO_TEXTA("CreateDXGIFactory"))) == NULL)
 				{
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
@@ -396,7 +388,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				void* D3D12CreateDevice;
-				if ((D3D12CreateDevice = ::GetProcAddress(libD3D12, "D3D12CreateDevice")) == NULL)
+				if ((D3D12CreateDevice = ::GetProcAddress(libD3D12, KIERO_TEXTA("D3D12CreateDevice"))) == NULL)
 				{
 					::DestroyWindow(window);
 					::UnregisterClass(windowClass.lpszClassName, windowClass.hInstance);
@@ -482,7 +474,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				::memcpy(g_methodsTable + 44 + 19 + 9, *(uintptr_t**)commandList, 60 * sizeof(uintptr_t));
 				::memcpy(g_methodsTable + 44 + 19 + 9 + 60, *(uintptr_t**)swapChain, 18 * sizeof(uintptr_t));
 
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 				MH_Initialize();
 #endif
 
@@ -519,7 +511,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 		{
 			if (_renderType == RenderType::OpenGL)
 			{
-#if KIERO_INCLUDE_OPENGL
+#ifdef KIERO_INCLUDE_OPENGL
 				HMODULE libOpenGL32;
 				if ((libOpenGL32 = ::GetModuleHandle(KIERO_TEXT("opengl32.dll"))) == NULL)
 				{
@@ -527,38 +519,78 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				const char* const methodsNames[] = {
-					"glAccum", "glAlphaFunc", "glAreTexturesResident", "glArrayElement", "glBegin", "glBindTexture", "glBitmap", "glBlendFunc", "glCallList", "glCallLists", "glClear", "glClearAccum",
-					"glClearColor", "glClearDepth", "glClearIndex", "glClearStencil", "glClipPlane", "glColor3b", "glColor3bv", "glColor3d", "glColor3dv", "glColor3f", "glColor3fv", "glColor3i", "glColor3iv",
-					"glColor3s", "glColor3sv", "glColor3ub", "glColor3ubv", "glColor3ui", "glColor3uiv", "glColor3us", "glColor3usv", "glColor4b", "glColor4bv", "glColor4d", "glColor4dv", "glColor4f",
-					"glColor4fv", "glColor4i", "glColor4iv", "glColor4s", "glColor4sv", "glColor4ub", "glColor4ubv", "glColor4ui", "glColor4uiv", "glColor4us", "glColor4usv", "glColorMask", "glColorMaterial",
-					"glColorPointer", "glCopyPixels", "glCopyTexImage1D", "glCopyTexImage2D", "glCopyTexSubImage1D", "glCopyTexSubImage2D", "glCullFaceglCullFace", "glDeleteLists", "glDeleteTextures",
-					"glDepthFunc", "glDepthMask", "glDepthRange", "glDisable", "glDisableClientState", "glDrawArrays", "glDrawBuffer", "glDrawElements", "glDrawPixels", "glEdgeFlag", "glEdgeFlagPointer",
-					"glEdgeFlagv", "glEnable", "glEnableClientState", "glEnd", "glEndList", "glEvalCoord1d", "glEvalCoord1dv", "glEvalCoord1f", "glEvalCoord1fv", "glEvalCoord2d", "glEvalCoord2dv",
-					"glEvalCoord2f", "glEvalCoord2fv", "glEvalMesh1", "glEvalMesh2", "glEvalPoint1", "glEvalPoint2", "glFeedbackBuffer", "glFinish", "glFlush", "glFogf", "glFogfv", "glFogi", "glFogiv",
-					"glFrontFace", "glFrustum", "glGenLists", "glGenTextures", "glGetBooleanv", "glGetClipPlane", "glGetDoublev", "glGetError", "glGetFloatv", "glGetIntegerv", "glGetLightfv", "glGetLightiv",
-					"glGetMapdv", "glGetMapfv", "glGetMapiv", "glGetMaterialfv", "glGetMaterialiv", "glGetPixelMapfv", "glGetPixelMapuiv", "glGetPixelMapusv", "glGetPointerv", "glGetPolygonStipple",
-					"glGetString", "glGetTexEnvfv", "glGetTexEnviv", "glGetTexGendv", "glGetTexGenfv", "glGetTexGeniv", "glGetTexImage", "glGetTexLevelParameterfv", "glGetTexLevelParameteriv",
-					"glGetTexParameterfv", "glGetTexParameteriv", "glHint", "glIndexMask", "glIndexPointer", "glIndexd", "glIndexdv", "glIndexf", "glIndexfv", "glIndexi", "glIndexiv", "glIndexs", "glIndexsv",
-					"glIndexub", "glIndexubv", "glInitNames", "glInterleavedArrays", "glIsEnabled", "glIsList", "glIsTexture", "glLightModelf", "glLightModelfv", "glLightModeli", "glLightModeliv", "glLightf",
-					"glLightfv", "glLighti", "glLightiv", "glLineStipple", "glLineWidth", "glListBase", "glLoadIdentity", "glLoadMatrixd", "glLoadMatrixf", "glLoadName", "glLogicOp", "glMap1d", "glMap1f",
-					"glMap2d", "glMap2f", "glMapGrid1d", "glMapGrid1f", "glMapGrid2d", "glMapGrid2f", "glMaterialf", "glMaterialfv", "glMateriali", "glMaterialiv", "glMatrixMode", "glMultMatrixd",
-					"glMultMatrixf", "glNewList", "glNormal3b", "glNormal3bv", "glNormal3d", "glNormal3dv", "glNormal3f", "glNormal3fv", "glNormal3i", "glNormal3iv", "glNormal3s", "glNormal3sv",
-					"glNormalPointer", "glOrtho", "glPassThrough", "glPixelMapfv", "glPixelMapuiv", "glPixelMapusv", "glPixelStoref", "glPixelStorei", "glPixelTransferf", "glPixelTransferi", "glPixelZoom",
-					"glPointSize", "glPolygonMode", "glPolygonOffset", "glPolygonStipple", "glPopAttrib", "glPopClientAttrib", "glPopMatrix", "glPopName", "glPrioritizeTextures", "glPushAttrib",
-					"glPushClientAttrib", "glPushMatrix", "glPushName", "glRasterPos2d", "glRasterPos2dv", "glRasterPos2f", "glRasterPos2fv", "glRasterPos2i", "glRasterPos2iv", "glRasterPos2s",
-					"glRasterPos2sv", "glRasterPos3d", "glRasterPos3dv", "glRasterPos3f", "glRasterPos3fv", "glRasterPos3i", "glRasterPos3iv", "glRasterPos3s", "glRasterPos3sv", "glRasterPos4d",
-					"glRasterPos4dv", "glRasterPos4f", "glRasterPos4fv", "glRasterPos4i", "glRasterPos4iv", "glRasterPos4s", "glRasterPos4sv", "glReadBuffer", "glReadPixels", "glRectd", "glRectdv", "glRectf",
-					"glRectfv", "glRecti", "glRectiv", "glRects", "glRectsv", "glRenderMode", "glRotated", "glRotatef", "glScaled", "glScalef", "glScissor", "glSelectBuffer", "glShadeModel", "glStencilFunc",
-					"glStencilMask", "glStencilOp", "glTexCoord1d", "glTexCoord1dv", "glTexCoord1f", "glTexCoord1fv", "glTexCoord1i", "glTexCoord1iv", "glTexCoord1s", "glTexCoord1sv", "glTexCoord2d",
-					"glTexCoord2dv", "glTexCoord2f", "glTexCoord2fv", "glTexCoord2i", "glTexCoord2iv", "glTexCoord2s", "glTexCoord2sv", "glTexCoord3d", "glTexCoord3dv", "glTexCoord3f", "glTexCoord3fv",
-					"glTexCoord3i", "glTexCoord3iv", "glTexCoord3s", "glTexCoord3sv", "glTexCoord4d", "glTexCoord4dv", "glTexCoord4f", "glTexCoord4fv", "glTexCoord4i", "glTexCoord4iv", "glTexCoord4s",
-					"glTexCoord4sv", "glTexCoordPointer", "glTexEnvf", "glTexEnvfv", "glTexEnvi", "glTexEnviv", "glTexGend", "glTexGendv", "glTexGenf", "glTexGenfv", "glTexGeni", "glTexGeniv", "glTexImage1D",
-					"glTexImage2D", "glTexParameterf", "glTexParameterfv", "glTexParameteri", "glTexParameteriv", "glTexSubImage1D", "glTexSubImage2D", "glTranslated", "glTranslatef", "glVertex2d",
-					"glVertex2dv", "glVertex2f", "glVertex2fv", "glVertex2i", "glVertex2iv", "glVertex2s", "glVertex2sv", "glVertex3d", "glVertex3dv", "glVertex3f", "glVertex3fv", "glVertex3i", "glVertex3iv",
-					"glVertex3s", "glVertex3sv", "glVertex4d", "glVertex4dv", "glVertex4f", "glVertex4fv", "glVertex4i", "glVertex4iv", "glVertex4s", "glVertex4sv", "glVertexPointer", "glViewport", "wglSwapBuffers"
+					KIERO_TEXTA("glAccum"), KIERO_TEXTA("glAlphaFunc"), KIERO_TEXTA("glAreTexturesResident"), KIERO_TEXTA("glArrayElement"), KIERO_TEXTA("glBegin"),
+					KIERO_TEXTA("glBindTexture"), KIERO_TEXTA("glBitmap"), KIERO_TEXTA("glBlendFunc"), KIERO_TEXTA("glCallList"), KIERO_TEXTA("glCallLists"),
+					KIERO_TEXTA("glClear"), KIERO_TEXTA("glClearAccum"), KIERO_TEXTA("glClearColor"), KIERO_TEXTA("glClearDepth"), KIERO_TEXTA("glClearIndex"),
+					KIERO_TEXTA("glClearStencil"), KIERO_TEXTA("glClipPlane"), KIERO_TEXTA("glColor3b"), KIERO_TEXTA("glColor3bv"), KIERO_TEXTA("glColor3d"),
+					KIERO_TEXTA("glColor3dv"), KIERO_TEXTA("glColor3f"), KIERO_TEXTA("glColor3fv"), KIERO_TEXTA("glColor3i"), KIERO_TEXTA("glColor3iv"),
+					KIERO_TEXTA("glColor3s"), KIERO_TEXTA("glColor3sv"), KIERO_TEXTA("glColor3ub"), KIERO_TEXTA("glColor3ubv"), KIERO_TEXTA("glColor3ui"),
+					KIERO_TEXTA("glColor3uiv"), KIERO_TEXTA("glColor3us"), KIERO_TEXTA("glColor3usv"), KIERO_TEXTA("glColor4b"), KIERO_TEXTA("glColor4bv"),
+					KIERO_TEXTA("glColor4d"), KIERO_TEXTA("glColor4dv"), KIERO_TEXTA("glColor4f"), KIERO_TEXTA("glColor4fv"), KIERO_TEXTA("glColor4i"),
+					KIERO_TEXTA("glColor4iv"), KIERO_TEXTA("glColor4s"), KIERO_TEXTA("glColor4sv"), KIERO_TEXTA("glColor4ub"), KIERO_TEXTA("glColor4ubv"),
+					KIERO_TEXTA("glColor4ui"), KIERO_TEXTA("glColor4uiv"), KIERO_TEXTA("glColor4us"), KIERO_TEXTA("glColor4usv"), KIERO_TEXTA("glColorMask"),
+					KIERO_TEXTA("glColorMaterial"), KIERO_TEXTA("glColorPointer"), KIERO_TEXTA("glCopyPixels"), KIERO_TEXTA("glCopyTexImage1D"),
+					KIERO_TEXTA("glCopyTexImage2D"), KIERO_TEXTA("glCopyTexSubImage1D"), KIERO_TEXTA("glCopyTexSubImage2D"), KIERO_TEXTA("glCullFaceglCullFace"),
+					KIERO_TEXTA("glDeleteLists"), KIERO_TEXTA("glDeleteTextures"), KIERO_TEXTA("glDepthFunc"), KIERO_TEXTA("glDepthMask"), KIERO_TEXTA("glDepthRange"),
+					KIERO_TEXTA("glDisable"), KIERO_TEXTA("glDisableClientState"), KIERO_TEXTA("glDrawArrays"), KIERO_TEXTA("glDrawBuffer"), KIERO_TEXTA("glDrawElements"),
+					KIERO_TEXTA("glDrawPixels"), KIERO_TEXTA("glEdgeFlag"), KIERO_TEXTA("glEdgeFlagPointer"), KIERO_TEXTA("glEdgeFlagv"), KIERO_TEXTA("glEnable"),
+					KIERO_TEXTA("glEnableClientState"), KIERO_TEXTA("glEnd"), KIERO_TEXTA("glEndList"), KIERO_TEXTA("glEvalCoord1d"), KIERO_TEXTA("glEvalCoord1dv"),
+					KIERO_TEXTA("glEvalCoord1f"), KIERO_TEXTA("glEvalCoord1fv"), KIERO_TEXTA("glEvalCoord2d"), KIERO_TEXTA("glEvalCoord2dv"), KIERO_TEXTA("glEvalCoord2f"),
+					KIERO_TEXTA("glEvalCoord2fv"), KIERO_TEXTA("glEvalMesh1"), KIERO_TEXTA("glEvalMesh2"), KIERO_TEXTA("glEvalPoint1"), KIERO_TEXTA("glEvalPoint2"),
+					KIERO_TEXTA("glFeedbackBuffer"), KIERO_TEXTA("glFinish"), KIERO_TEXTA("glFlush"), KIERO_TEXTA("glFogf"), KIERO_TEXTA("glFogfv"), KIERO_TEXTA("glFogi"),
+					KIERO_TEXTA("glFogiv"), KIERO_TEXTA("glFrontFace"), KIERO_TEXTA("glFrustum"), KIERO_TEXTA("glGenLists"), KIERO_TEXTA("glGenTextures"),
+					KIERO_TEXTA("glGetBooleanv"), KIERO_TEXTA("glGetClipPlane"), KIERO_TEXTA("glGetDoublev"), KIERO_TEXTA("glGetError"), KIERO_TEXTA("glGetFloatv"),
+					KIERO_TEXTA("glGetIntegerv"), KIERO_TEXTA("glGetLightfv"), KIERO_TEXTA("glGetLightiv"), KIERO_TEXTA("glGetMapdv"), KIERO_TEXTA("glGetMapfv"),
+					KIERO_TEXTA("glGetMapiv"), KIERO_TEXTA("glGetMaterialfv"), KIERO_TEXTA("glGetMaterialiv"), KIERO_TEXTA("glGetPixelMapfv"),
+					KIERO_TEXTA("glGetPixelMapuiv"), KIERO_TEXTA("glGetPixelMapusv"), KIERO_TEXTA("glGetPointerv"), KIERO_TEXTA("glGetPolygonStipple"),
+					KIERO_TEXTA("glGetString"), KIERO_TEXTA("glGetTexEnvfv"), KIERO_TEXTA("glGetTexEnviv"), KIERO_TEXTA("glGetTexGendv"), KIERO_TEXTA("glGetTexGenfv"),
+					KIERO_TEXTA("glGetTexGeniv"), KIERO_TEXTA("glGetTexImage"), KIERO_TEXTA("glGetTexLevelParameterfv"), KIERO_TEXTA("glGetTexLevelParameteriv"),
+					KIERO_TEXTA("glGetTexParameterfv"), KIERO_TEXTA("glGetTexParameteriv"), KIERO_TEXTA("glHint"), KIERO_TEXTA("glIndexMask"), KIERO_TEXTA("glIndexPointer"),
+					KIERO_TEXTA("glIndexd"), KIERO_TEXTA("glIndexdv"), KIERO_TEXTA("glIndexf"), KIERO_TEXTA("glIndexfv"), KIERO_TEXTA("glIndexi"), KIERO_TEXTA("glIndexiv"),
+					KIERO_TEXTA("glIndexs"), KIERO_TEXTA("glIndexsv"), KIERO_TEXTA("glIndexub"), KIERO_TEXTA("glIndexubv"), KIERO_TEXTA("glInitNames"),
+					KIERO_TEXTA("glInterleavedArrays"), KIERO_TEXTA("glIsEnabled"), KIERO_TEXTA("glIsList"), KIERO_TEXTA("glIsTexture"), KIERO_TEXTA("glLightModelf"),
+					KIERO_TEXTA("glLightModelfv"), KIERO_TEXTA("glLightModeli"), KIERO_TEXTA("glLightModeliv"), KIERO_TEXTA("glLightf"), KIERO_TEXTA("glLightfv"),
+					KIERO_TEXTA("glLighti"), KIERO_TEXTA("glLightiv"), KIERO_TEXTA("glLineStipple"), KIERO_TEXTA("glLineWidth"), KIERO_TEXTA("glListBase"),
+					KIERO_TEXTA("glLoadIdentity"), KIERO_TEXTA("glLoadMatrixd"), KIERO_TEXTA("glLoadMatrixf"), KIERO_TEXTA("glLoadName"), KIERO_TEXTA("glLogicOp"),
+					KIERO_TEXTA("glMap1d"), KIERO_TEXTA("glMap1f"), KIERO_TEXTA("glMap2d"), KIERO_TEXTA("glMap2f"), KIERO_TEXTA("glMapGrid1d"), KIERO_TEXTA("glMapGrid1f"),
+					KIERO_TEXTA("glMapGrid2d"), KIERO_TEXTA("glMapGrid2f"), KIERO_TEXTA("glMaterialf"), KIERO_TEXTA("glMaterialfv"), KIERO_TEXTA("glMateriali"),
+					KIERO_TEXTA("glMaterialiv"), KIERO_TEXTA("glMatrixMode"), KIERO_TEXTA("glMultMatrixd"), KIERO_TEXTA("glMultMatrixf"), KIERO_TEXTA("glNewList"),
+					KIERO_TEXTA("glNormal3b"), KIERO_TEXTA("glNormal3bv"), KIERO_TEXTA("glNormal3d"), KIERO_TEXTA("glNormal3dv"), KIERO_TEXTA("glNormal3f"),
+					KIERO_TEXTA("glNormal3fv"), KIERO_TEXTA("glNormal3i"), KIERO_TEXTA("glNormal3iv"), KIERO_TEXTA("glNormal3s"), KIERO_TEXTA("glNormal3sv"),
+					KIERO_TEXTA("glNormalPointer"), KIERO_TEXTA("glOrtho"), KIERO_TEXTA("glPassThrough"), KIERO_TEXTA("glPixelMapfv"), KIERO_TEXTA("glPixelMapuiv"),
+					KIERO_TEXTA("glPixelMapusv"), KIERO_TEXTA("glPixelStoref"), KIERO_TEXTA("glPixelStorei"), KIERO_TEXTA("glPixelTransferf"),
+					KIERO_TEXTA("glPixelTransferi"), KIERO_TEXTA("glPixelZoom"), KIERO_TEXTA("glPointSize"), KIERO_TEXTA("glPolygonMode"), KIERO_TEXTA("glPolygonOffset"),
+					KIERO_TEXTA("glPolygonStipple"), KIERO_TEXTA("glPopAttrib"), KIERO_TEXTA("glPopClientAttrib"), KIERO_TEXTA("glPopMatrix"), KIERO_TEXTA("glPopName"),
+					KIERO_TEXTA("glPrioritizeTextures"), KIERO_TEXTA("glPushAttrib"), KIERO_TEXTA("glPushClientAttrib"), KIERO_TEXTA("glPushMatrix"),
+					KIERO_TEXTA("glPushName"), KIERO_TEXTA("glRasterPos2d"), KIERO_TEXTA("glRasterPos2dv"), KIERO_TEXTA("glRasterPos2f"), KIERO_TEXTA("glRasterPos2fv"),
+					KIERO_TEXTA("glRasterPos2i"), KIERO_TEXTA("glRasterPos2iv"), KIERO_TEXTA("glRasterPos2s"), KIERO_TEXTA("glRasterPos2sv"), KIERO_TEXTA("glRasterPos3d"),
+					KIERO_TEXTA("glRasterPos3dv"), KIERO_TEXTA("glRasterPos3f"), KIERO_TEXTA("glRasterPos3fv"), KIERO_TEXTA("glRasterPos3i"), KIERO_TEXTA("glRasterPos3iv"),
+					KIERO_TEXTA("glRasterPos3s"), KIERO_TEXTA("glRasterPos3sv"), KIERO_TEXTA("glRasterPos4d"), KIERO_TEXTA("glRasterPos4dv"), KIERO_TEXTA("glRasterPos4f"),
+					KIERO_TEXTA("glRasterPos4fv"), KIERO_TEXTA("glRasterPos4i"), KIERO_TEXTA("glRasterPos4iv"), KIERO_TEXTA("glRasterPos4s"), KIERO_TEXTA("glRasterPos4sv"),
+					KIERO_TEXTA("glReadBuffer"), KIERO_TEXTA("glReadPixels"), KIERO_TEXTA("glRectd"), KIERO_TEXTA("glRectdv"), KIERO_TEXTA("glRectf"),
+					KIERO_TEXTA("glRectfv"), KIERO_TEXTA("glRecti"), KIERO_TEXTA("glRectiv"), KIERO_TEXTA("glRects"), KIERO_TEXTA("glRectsv"), KIERO_TEXTA("glRenderMode"),
+					KIERO_TEXTA("glRotated"), KIERO_TEXTA("glRotatef"), KIERO_TEXTA("glScaled"), KIERO_TEXTA("glScalef"), KIERO_TEXTA("glScissor"),
+					KIERO_TEXTA("glSelectBuffer"), KIERO_TEXTA("glShadeModel"), KIERO_TEXTA("glStencilFunc"), KIERO_TEXTA("glStencilMask"), KIERO_TEXTA("glStencilOp"),
+					KIERO_TEXTA("glTexCoord1d"), KIERO_TEXTA("glTexCoord1dv"), KIERO_TEXTA("glTexCoord1f"), KIERO_TEXTA("glTexCoord1fv"), KIERO_TEXTA("glTexCoord1i"),
+					KIERO_TEXTA("glTexCoord1iv"), KIERO_TEXTA("glTexCoord1s"), KIERO_TEXTA("glTexCoord1sv"), KIERO_TEXTA("glTexCoord2d"), KIERO_TEXTA("glTexCoord2dv"),
+					KIERO_TEXTA("glTexCoord2f"), KIERO_TEXTA("glTexCoord2fv"), KIERO_TEXTA("glTexCoord2i"), KIERO_TEXTA("glTexCoord2iv"), KIERO_TEXTA("glTexCoord2s"),
+					KIERO_TEXTA("glTexCoord2sv"), KIERO_TEXTA("glTexCoord3d"), KIERO_TEXTA("glTexCoord3dv"), KIERO_TEXTA("glTexCoord3f"), KIERO_TEXTA("glTexCoord3fv"),
+					KIERO_TEXTA("glTexCoord3i"), KIERO_TEXTA("glTexCoord3iv"), KIERO_TEXTA("glTexCoord3s"), KIERO_TEXTA("glTexCoord3sv"), KIERO_TEXTA("glTexCoord4d"),
+					KIERO_TEXTA("glTexCoord4dv"), KIERO_TEXTA("glTexCoord4f"), KIERO_TEXTA("glTexCoord4fv"), KIERO_TEXTA("glTexCoord4i"), KIERO_TEXTA("glTexCoord4iv"),
+					KIERO_TEXTA("glTexCoord4s"), KIERO_TEXTA("glTexCoord4sv"), KIERO_TEXTA("glTexCoordPointer"), KIERO_TEXTA("glTexEnvf"), KIERO_TEXTA("glTexEnvfv"),
+					KIERO_TEXTA("glTexEnvi"), KIERO_TEXTA("glTexEnviv"), KIERO_TEXTA("glTexGend"), KIERO_TEXTA("glTexGendv"), KIERO_TEXTA("glTexGenf"),
+					KIERO_TEXTA("glTexGenfv"), KIERO_TEXTA("glTexGeni"), KIERO_TEXTA("glTexGeniv"), KIERO_TEXTA("glTexImage1D"), KIERO_TEXTA("glTexImage2D"),
+					KIERO_TEXTA("glTexParameterf"), KIERO_TEXTA("glTexParameterfv"), KIERO_TEXTA("glTexParameteri"), KIERO_TEXTA("glTexParameteriv"),
+					KIERO_TEXTA("glTexSubImage1D"), KIERO_TEXTA("glTexSubImage2D"), KIERO_TEXTA("glTranslated"), KIERO_TEXTA("glTranslatef"), KIERO_TEXTA("glVertex2d"),
+					KIERO_TEXTA("glVertex2dv"), KIERO_TEXTA("glVertex2f"), KIERO_TEXTA("glVertex2fv"), KIERO_TEXTA("glVertex2i"), KIERO_TEXTA("glVertex2iv"),
+					KIERO_TEXTA("glVertex2s"), KIERO_TEXTA("glVertex2sv"), KIERO_TEXTA("glVertex3d"), KIERO_TEXTA("glVertex3dv"), KIERO_TEXTA("glVertex3f"),
+					KIERO_TEXTA("glVertex3fv"), KIERO_TEXTA("glVertex3i"), KIERO_TEXTA("glVertex3iv"), KIERO_TEXTA("glVertex3s"), KIERO_TEXTA("glVertex3sv"),
+					KIERO_TEXTA("glVertex4d"), KIERO_TEXTA("glVertex4dv"), KIERO_TEXTA("glVertex4f"), KIERO_TEXTA("glVertex4fv"), KIERO_TEXTA("glVertex4i"),
+					KIERO_TEXTA("glVertex4iv"), KIERO_TEXTA("glVertex4s"), KIERO_TEXTA("glVertex4sv"), KIERO_TEXTA("glVertexPointer"), KIERO_TEXTA("glViewport"),
+					KIERO_TEXTA("wglSwapBuffers") 
 				};
 
-				size_t size = KIERO_ARRAY_SIZE(methodsNames);
+				size_t size = KIERO_ARRAYSIZE(methodsNames);
 
 				g_methodsTable = (uintptr_t*)::calloc(size, sizeof(uintptr_t));
 
@@ -567,7 +599,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 					g_methodsTable[i] = (uintptr_t)::GetProcAddress(libOpenGL32, methodsNames[i]);
 				}
 
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 				MH_Initialize();
 #endif
 
@@ -578,7 +610,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 			}
 			else if (_renderType == RenderType::Vulkan)
 			{
-#if KIERO_INCLUDE_VULKAN
+#ifdef KIERO_INCLUDE_VULKAN
 				HMODULE libVulkan;
 				if ((libVulkan = GetModuleHandle(KIERO_TEXT("vulkan-1.dll"))) == NULL)
 				{
@@ -586,27 +618,48 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 				}
 
 				const char* const methodsNames[] = {
-					"vkCreateInstance", "vkDestroyInstance", "vkEnumeratePhysicalDevices", "vkGetPhysicalDeviceFeatures", "vkGetPhysicalDeviceFormatProperties", "vkGetPhysicalDeviceImageFormatProperties",
-					"vkGetPhysicalDeviceProperties", "vkGetPhysicalDeviceQueueFamilyProperties", "vkGetPhysicalDeviceMemoryProperties", "vkGetInstanceProcAddr", "vkGetDeviceProcAddr", "vkCreateDevice",
-					"vkDestroyDevice", "vkEnumerateInstanceExtensionProperties", "vkEnumerateDeviceExtensionProperties", "vkEnumerateDeviceLayerProperties", "vkGetDeviceQueue", "vkQueueSubmit", "vkQueueWaitIdle",
-					"vkDeviceWaitIdle", "vkAllocateMemory", "vkFreeMemory", "vkMapMemory", "vkUnmapMemory", "vkFlushMappedMemoryRanges", "vkInvalidateMappedMemoryRanges", "vkGetDeviceMemoryCommitment",
-					"vkBindBufferMemory", "vkBindImageMemory", "vkGetBufferMemoryRequirements", "vkGetImageMemoryRequirements", "vkGetImageSparseMemoryRequirements", "vkGetPhysicalDeviceSparseImageFormatProperties",
-					"vkQueueBindSparse", "vkCreateFence", "vkDestroyFence", "vkResetFences", "vkGetFenceStatus", "vkWaitForFences", "vkCreateSemaphore", "vkDestroySemaphore", "vkCreateEvent", "vkDestroyEvent",
-					"vkGetEventStatus", "vkSetEvent", "vkResetEvent", "vkCreateQueryPool", "vkDestroyQueryPool", "vkGetQueryPoolResults", "vkCreateBuffer", "vkDestroyBuffer", "vkCreateBufferView", "vkDestroyBufferView",
-					"vkCreateImage", "vkDestroyImage", "vkGetImageSubresourceLayout", "vkCreateImageView", "vkDestroyImageView", "vkCreateShaderModule", "vkDestroyShaderModule", "vkCreatePipelineCache",
-					"vkDestroyPipelineCache", "vkGetPipelineCacheData", "vkMergePipelineCaches", "vkCreateGraphicsPipelines", "vkCreateComputePipelines", "vkDestroyPipeline", "vkCreatePipelineLayout",
-					"vkDestroyPipelineLayout", "vkCreateSampler", "vkDestroySampler", "vkCreateDescriptorSetLayout", "vkDestroyDescriptorSetLayout", "vkCreateDescriptorPool", "vkDestroyDescriptorPool",
-					"vkResetDescriptorPool", "vkAllocateDescriptorSets", "vkFreeDescriptorSets", "vkUpdateDescriptorSets", "vkCreateFramebuffer", "vkDestroyFramebuffer", "vkCreateRenderPass", "vkDestroyRenderPass",
-					"vkGetRenderAreaGranularity", "vkCreateCommandPool", "vkDestroyCommandPool", "vkResetCommandPool", "vkAllocateCommandBuffers", "vkFreeCommandBuffers", "vkBeginCommandBuffer", "vkEndCommandBuffer",
-					"vkResetCommandBuffer", "vkCmdBindPipeline", "vkCmdSetViewport", "vkCmdSetScissor", "vkCmdSetLineWidth", "vkCmdSetDepthBias", "vkCmdSetBlendConstants", "vkCmdSetDepthBounds",
-					"vkCmdSetStencilCompareMask", "vkCmdSetStencilWriteMask", "vkCmdSetStencilReference", "vkCmdBindDescriptorSets", "vkCmdBindIndexBuffer", "vkCmdBindVertexBuffers", "vkCmdDraw", "vkCmdDrawIndexed",
-					"vkCmdDrawIndirect", "vkCmdDrawIndexedIndirect", "vkCmdDispatch", "vkCmdDispatchIndirect", "vkCmdCopyBuffer", "vkCmdCopyImage", "vkCmdBlitImage", "vkCmdCopyBufferToImage", "vkCmdCopyImageToBuffer",
-					"vkCmdUpdateBuffer", "vkCmdFillBuffer", "vkCmdClearColorImage", "vkCmdClearDepthStencilImage", "vkCmdClearAttachments", "vkCmdResolveImage", "vkCmdSetEvent", "vkCmdResetEvent", "vkCmdWaitEvents",
-					"vkCmdPipelineBarrier", "vkCmdBeginQuery", "vkCmdEndQuery", "vkCmdResetQueryPool", "vkCmdWriteTimestamp", "vkCmdCopyQueryPoolResults", "vkCmdPushConstants", "vkCmdBeginRenderPass", "vkCmdNextSubpass",
-					"vkCmdEndRenderPass", "vkCmdExecuteCommands"
+					KIERO_TEXTA("vkCreateInstance"), KIERO_TEXTA("vkDestroyInstance"), KIERO_TEXTA("vkEnumeratePhysicalDevices"),
+					KIERO_TEXTA("vkGetPhysicalDeviceFeatures"), KIERO_TEXTA("vkGetPhysicalDeviceFormatProperties"),
+					KIERO_TEXTA("vkGetPhysicalDeviceImageFormatProperties"), KIERO_TEXTA("vkGetPhysicalDeviceProperties"),
+					KIERO_TEXTA("vkGetPhysicalDeviceQueueFamilyProperties"), KIERO_TEXTA("vkGetPhysicalDeviceMemoryProperties"),
+					KIERO_TEXTA("vkGetInstanceProcAddr"), KIERO_TEXTA("vkGetDeviceProcAddr"), KIERO_TEXTA("vkCreateDevice"), KIERO_TEXTA("vkDestroyDevice"),
+					KIERO_TEXTA("vkEnumerateInstanceExtensionProperties"), KIERO_TEXTA("vkEnumerateDeviceExtensionProperties"),
+					KIERO_TEXTA("vkEnumerateDeviceLayerProperties"), KIERO_TEXTA("vkGetDeviceQueue"), KIERO_TEXTA("vkQueueSubmit"), KIERO_TEXTA("vkQueueWaitIdle"),
+					KIERO_TEXTA("vkDeviceWaitIdle"), KIERO_TEXTA("vkAllocateMemory"), KIERO_TEXTA("vkFreeMemory"), KIERO_TEXTA("vkMapMemory"), KIERO_TEXTA("vkUnmapMemory"),
+					KIERO_TEXTA("vkFlushMappedMemoryRanges"), KIERO_TEXTA("vkInvalidateMappedMemoryRanges"), KIERO_TEXTA("vkGetDeviceMemoryCommitment"),
+					KIERO_TEXTA("vkBindBufferMemory"), KIERO_TEXTA("vkBindImageMemory"), KIERO_TEXTA("vkGetBufferMemoryRequirements"),
+					KIERO_TEXTA("vkGetImageMemoryRequirements"), KIERO_TEXTA("vkGetImageSparseMemoryRequirements"),
+					KIERO_TEXTA("vkGetPhysicalDeviceSparseImageFormatProperties"), KIERO_TEXTA("vkQueueBindSparse"), KIERO_TEXTA("vkCreateFence"),
+					KIERO_TEXTA("vkDestroyFence"), KIERO_TEXTA("vkResetFences"), KIERO_TEXTA("vkGetFenceStatus"), KIERO_TEXTA("vkWaitForFences"),
+					KIERO_TEXTA("vkCreateSemaphore"), KIERO_TEXTA("vkDestroySemaphore"), KIERO_TEXTA("vkCreateEvent"), KIERO_TEXTA("vkDestroyEvent"),
+					KIERO_TEXTA("vkGetEventStatus"), KIERO_TEXTA("vkSetEvent"), KIERO_TEXTA("vkResetEvent"), KIERO_TEXTA("vkCreateQueryPool"),
+					KIERO_TEXTA("vkDestroyQueryPool"), KIERO_TEXTA("vkGetQueryPoolResults"), KIERO_TEXTA("vkCreateBuffer"), KIERO_TEXTA("vkDestroyBuffer"),
+					KIERO_TEXTA("vkCreateBufferView"), KIERO_TEXTA("vkDestroyBufferView"), KIERO_TEXTA("vkCreateImage"), KIERO_TEXTA("vkDestroyImage"),
+					KIERO_TEXTA("vkGetImageSubresourceLayout"), KIERO_TEXTA("vkCreateImageView"), KIERO_TEXTA("vkDestroyImageView"), KIERO_TEXTA("vkCreateShaderModule"),
+					KIERO_TEXTA("vkDestroyShaderModule"), KIERO_TEXTA("vkCreatePipelineCache"), KIERO_TEXTA("vkDestroyPipelineCache"),
+					KIERO_TEXTA("vkGetPipelineCacheData"), KIERO_TEXTA("vkMergePipelineCaches"), KIERO_TEXTA("vkCreateGraphicsPipelines"),
+					KIERO_TEXTA("vkCreateComputePipelines"), KIERO_TEXTA("vkDestroyPipeline"), KIERO_TEXTA("vkCreatePipelineLayout"),
+					KIERO_TEXTA("vkDestroyPipelineLayout"), KIERO_TEXTA("vkCreateSampler"), KIERO_TEXTA("vkDestroySampler"), KIERO_TEXTA("vkCreateDescriptorSetLayout"),
+					KIERO_TEXTA("vkDestroyDescriptorSetLayout"), KIERO_TEXTA("vkCreateDescriptorPool"), KIERO_TEXTA("vkDestroyDescriptorPool"),
+					KIERO_TEXTA("vkResetDescriptorPool"), KIERO_TEXTA("vkAllocateDescriptorSets"), KIERO_TEXTA("vkFreeDescriptorSets"),
+					KIERO_TEXTA("vkUpdateDescriptorSets"), KIERO_TEXTA("vkCreateFramebuffer"), KIERO_TEXTA("vkDestroyFramebuffer"), KIERO_TEXTA("vkCreateRenderPass"),
+					KIERO_TEXTA("vkDestroyRenderPass"), KIERO_TEXTA("vkGetRenderAreaGranularity"), KIERO_TEXTA("vkCreateCommandPool"), KIERO_TEXTA("vkDestroyCommandPool"),
+					KIERO_TEXTA("vkResetCommandPool"), KIERO_TEXTA("vkAllocateCommandBuffers"), KIERO_TEXTA("vkFreeCommandBuffers"), KIERO_TEXTA("vkBeginCommandBuffer"),
+					KIERO_TEXTA("vkEndCommandBuffer"), KIERO_TEXTA("vkResetCommandBuffer"), KIERO_TEXTA("vkCmdBindPipeline"), KIERO_TEXTA("vkCmdSetViewport"),
+					KIERO_TEXTA("vkCmdSetScissor"), KIERO_TEXTA("vkCmdSetLineWidth"), KIERO_TEXTA("vkCmdSetDepthBias"), KIERO_TEXTA("vkCmdSetBlendConstants"),
+					KIERO_TEXTA("vkCmdSetDepthBounds"), KIERO_TEXTA("vkCmdSetStencilCompareMask"), KIERO_TEXTA("vkCmdSetStencilWriteMask"),
+					KIERO_TEXTA("vkCmdSetStencilReference"), KIERO_TEXTA("vkCmdBindDescriptorSets"), KIERO_TEXTA("vkCmdBindIndexBuffer"),
+					KIERO_TEXTA("vkCmdBindVertexBuffers"), KIERO_TEXTA("vkCmdDraw"), KIERO_TEXTA("vkCmdDrawIndexed"), KIERO_TEXTA("vkCmdDrawIndirect"),
+					KIERO_TEXTA("vkCmdDrawIndexedIndirect"), KIERO_TEXTA("vkCmdDispatch"), KIERO_TEXTA("vkCmdDispatchIndirect"), KIERO_TEXTA("vkCmdCopyBuffer"),
+					KIERO_TEXTA("vkCmdCopyImage"), KIERO_TEXTA("vkCmdBlitImage"), KIERO_TEXTA("vkCmdCopyBufferToImage"), KIERO_TEXTA("vkCmdCopyImageToBuffer"),
+					KIERO_TEXTA("vkCmdUpdateBuffer"), KIERO_TEXTA("vkCmdFillBuffer"), KIERO_TEXTA("vkCmdClearColorImage"), KIERO_TEXTA("vkCmdClearDepthStencilImage"),
+					KIERO_TEXTA("vkCmdClearAttachments"), KIERO_TEXTA("vkCmdResolveImage"), KIERO_TEXTA("vkCmdSetEvent"), KIERO_TEXTA("vkCmdResetEvent"),
+					KIERO_TEXTA("vkCmdWaitEvents"), KIERO_TEXTA("vkCmdPipelineBarrier"), KIERO_TEXTA("vkCmdBeginQuery"), KIERO_TEXTA("vkCmdEndQuery"),
+					KIERO_TEXTA("vkCmdResetQueryPool"), KIERO_TEXTA("vkCmdWriteTimestamp"), KIERO_TEXTA("vkCmdCopyQueryPoolResults"), KIERO_TEXTA("vkCmdPushConstants"),
+					KIERO_TEXTA("vkCmdBeginRenderPass"), KIERO_TEXTA("vkCmdNextSubpass"), KIERO_TEXTA("vkCmdEndRenderPass"), KIERO_TEXTA("vkCmdExecuteCommands")
 				};
 
-				size_t size = KIERO_ARRAY_SIZE(methodsNames);
+				size_t size = KIERO_ARRAYSIZE(methodsNames);
 
 				g_methodsTable = (uintptr_t*)::calloc(size, sizeof(uintptr_t));
 
@@ -615,7 +668,7 @@ kiero::Status::Enum kiero::init(RenderType::Enum _renderType)
 					g_methodsTable[i] = (uintptr_t)::GetProcAddress(libVulkan, methodsNames[i]);
 				}
 
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 				MH_Initialize();
 #endif
 
@@ -671,7 +724,7 @@ void kiero::shutdown()
 {
 	if (g_renderType != RenderType::None)
 	{
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 		MH_DisableHook(MH_ALL_HOOKS);
 #endif
 
@@ -685,7 +738,7 @@ kiero::Status::Enum kiero::bind(uint16_t _index, void** _original, void* _functi
 {
 	if (g_renderType != RenderType::None)
 	{
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 		void* target = (void*)g_methodsTable[_index];
 		if (MH_CreateHook(target, _function, _original) != MH_OK || MH_EnableHook(target) != MH_OK)
 		{
@@ -703,7 +756,7 @@ void kiero::unbind(uint16_t _index)
 {
 	if (g_renderType != RenderType::None)
 	{
-#if KIERO_USE_MINHOOK
+#ifdef KIERO_USE_MINHOOK
 		MH_DisableHook((void*)g_methodsTable[_index]);
 #endif
 	}

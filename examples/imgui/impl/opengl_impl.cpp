@@ -1,6 +1,6 @@
-#include "kiero.h"
+﻿#include "kiero.h"
 
-#if KIERO_INCLUDE_OPENGL
+#ifdef KIERO_INCLUDE_OPENGL
 
 #include "opengl_impl.h"
 #include <gl/GL.h>

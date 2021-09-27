@@ -1,18 +1,32 @@
 #pragma once
 
+#include "kiero_userconfig.h"
+
 #include <Windows.h>
 #include <stdio.h>
 #include <stdint.h>
 
-#define KIERO_VERSION "1.2.12-Harmmmm"
+// Original: https://github.com/Rebzzel/kiero/
+// Based on version 1.2.12 with parts of 1.22.0-preview
+#define KIERO_VERSION "HarmsFork-1.0.0"
 
-#define KIERO_INCLUDE_D3D9   0 // 1 if you need D3D9 hook
-#define KIERO_INCLUDE_D3D10  0 // 1 if you need D3D10 hook
-#define KIERO_INCLUDE_D3D11  0 // 1 if you need D3D11 hook
-#define KIERO_INCLUDE_D3D12  0 // 1 if you need D3D12 hook
-#define KIERO_INCLUDE_OPENGL 0 // 1 if you need OpenGL hook
-#define KIERO_INCLUDE_VULKAN 0 // 1 if you need Vulkan hook
-#define KIERO_USE_MINHOOK    0 // 1 if you will use kiero::bind function
+#ifndef KIERO_TEXTA
+#define KIERO_TEXTA(_TEXT) _TEXT
+#endif
+
+#ifndef KIERO_TEXTW
+#define KIERO_TEXTW(_TEXT) L##_TEXT
+#endif
+
+#ifdef UNICODE
+#define KIERO_TEXT(_TEXT) KIERO_TEXTW(_TEXT)
+#else
+#define KIERO_TEXT(_TEXT) KIERO_TEXTA(_TEXT)
+#endif
+
+#ifndef KIERO_ARRAYSIZE
+#define KIERO_ARRAYSIZE(_ARR) ((size_t)(sizeof(_ARR) / sizeof(*(_ARR))))
+#endif
 
 namespace kiero
 {

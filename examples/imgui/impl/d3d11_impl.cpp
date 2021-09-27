@@ -1,6 +1,6 @@
-#include "kiero.h"
+﻿#include "kiero.h"
 
-#if KIERO_INCLUDE_D3D11
+#ifdef KIERO_INCLUDE_D3D11
 
 #include "d3d11_impl.h"
 #include <d3d11.h>
